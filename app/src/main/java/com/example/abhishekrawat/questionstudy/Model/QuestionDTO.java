@@ -16,4 +16,5 @@ public class QuestionDTO implements Serializable {
     public String date;
     public UserDTO user;
     public List<String> fileUrls;
+    public List<MediaFilesDTO> mediaUrl;
 }

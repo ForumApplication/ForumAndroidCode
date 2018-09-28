@@ -2,6 +2,7 @@ package com.example.abhishekrawat.questionstudy.Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.abhishekrawat.questionstudy.Model.QuestionDTO;
 import com.example.abhishekrawat.questionstudy.R;
 import com.example.abhishekrawat.questionstudy.ui.ActivityListener;
@@ -22,9 +24,10 @@ public class QuestionRecyclerViewAdapter extends RecyclerView.Adapter<QuestionRe
     Context mContext;
 
     QuestionItemListener pageListener;
+
     public QuestionRecyclerViewAdapter(Context context, List<QuestionDTO> questions) {
-    this.mContext=context;
-    this.questionList=questions;
+        this.mContext = context;
+        this.questionList = questions;
     }
 
     @NonNull
@@ -37,19 +40,25 @@ public class QuestionRecyclerViewAdapter extends RecyclerView.Adapter<QuestionRe
 
     @Override
     public void onBindViewHolder(final QuestionViewHolder holder, int position) {
-        QuestionDTO question=questionList.get(position);
+        QuestionDTO question = questionList.get(position);
         try {
             holder.questionTitle.setText(question.question);
             holder.questionTitle.setTag(position);
             holder.questionDescription.setText(question.description);
-            holder.openQuestionButton.setTag(position);
-            holder.openQuestionButton.setOnClickListener(this);
             holder.createTime.setText(question.date);
             holder.userName.setText(question.user.name);
+            if (question.mediaUrl.size() > 0) {
+                holder.imageQuestion.setVisibility(View.VISIBLE);
+                Glide.with(mContext)
+                        .load(question.mediaUrl.get(0).url)
+                        .into(holder.imageQuestion)
+                ;
+            }
+            holder.itemView.setTag(position);
+            holder.itemView.setOnClickListener(this);
+        } catch (Exception ex) {
         }
-        catch (Exception ex)
-        {}
-        pageListener=(QuestionItemListener) mContext;
+        pageListener = (QuestionItemListener) mContext;
     }
 
     @Override
@@ -59,28 +68,25 @@ public class QuestionRecyclerViewAdapter extends RecyclerView.Adapter<QuestionRe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.open_question_btn:
-                pageListener.openQuestionDetailFragment(questionList.get(Integer.parseInt(v.getTag().toString())));
-                break;
-        }
+        pageListener.openQuestionDetailFragment(questionList.get(Integer.parseInt(v.getTag().toString())));
     }
 
     public class QuestionViewHolder extends RecyclerView.ViewHolder {
-        TextView questionTitle,questionDescription,userName,createTime;
-        ImageView openQuestionButton;
+        TextView questionTitle, questionDescription, userName, createTime;
+        ImageView imageQuestion;
+
         public QuestionViewHolder(View itemView) {
             super(itemView);
-            questionTitle=itemView.findViewById(R.id.question_title);
-            questionDescription=itemView.findViewById(R.id.question_description);
-            openQuestionButton=itemView.findViewById(R.id.open_question_btn);
-            userName=itemView.findViewById(R.id.user_name);
-            createTime=itemView.findViewById(R.id.create_time);
+            questionTitle = itemView.findViewById(R.id.question_title);
+            questionDescription = itemView.findViewById(R.id.question_description);
+            userName = itemView.findViewById(R.id.user_name);
+            createTime = itemView.findViewById(R.id.create_time);
+            imageQuestion = itemView.findViewById(R.id.image_question);
+
         }
     }
-    public interface QuestionItemListener extends ActivityListener
-    {
+
+    public interface QuestionItemListener extends ActivityListener {
         void openQuestionDetailFragment(QuestionDTO question);
     }
 }

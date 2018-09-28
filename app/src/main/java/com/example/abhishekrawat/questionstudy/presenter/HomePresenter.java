@@ -40,6 +40,7 @@ public class HomePresenter {
                for(int i=0;i<arrayList.size();i++)
                {
                   String json= gson.toJson(arrayList.get(i));
+                  json=json.replace("fileUrls","mediaUrl");
                   QuestionDTO questionDTO=gson.fromJson(json,QuestionDTO.class);
                   questionList.add(questionDTO);
                }

@@ -49,7 +49,8 @@ public class AWSUtil {
             if(length>500){
                 file=Util.reduceFileSize(file);
             }
-           final String fileUrl="userfiles/" + Util.getCurrentTimestamp()+String.valueOf(Math.random()).substring(3) + "." + Util.getMimeType(mContext,uri);
+           final String filename=Util.getCurrentTimestamp()+String.valueOf(Math.random()).substring(3) + "." + Util.getMimeType(mContext,uri);
+           final String fileUrl="userfiles/" +filename ;
             TransferObserver uploadObserver =
                     transferUtility.upload(
                             fileUrl,
@@ -63,7 +64,7 @@ public class AWSUtil {
                         if(mFragment instanceof AddQuestionFragment)
                         {
                             AddQuestionView adv=(AddQuestionView)mView;
-                            adv.fileUploadSuccess(getAWSUrl(fileUrl));
+                            adv.fileUploadSuccess(filename);
                         }
 
                     }
